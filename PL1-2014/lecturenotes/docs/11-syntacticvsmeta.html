@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>11-syntacticvsmeta.scala</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <style type="text/css">
+        /*--------------------- Layout and Typography ----------------------------*/
+        body {
+            font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, FreeSerif, serif;
+            font-size: 15px;
+            line-height: 22px;
+            color: #252519;
+            margin: 0; padding: 0;
+        }
+        a {
+            color: #261a3b;
+        }
+        a:visited {
+            color: #261a3b;
+        }
+        p {
+            margin: 0 0 15px 0;
+        }
+        h4, h5, h6 {
+            color: #333;
+            padding: 6px 0 6px 0;
+            font-size: 13px;
+        }
+        h2, h3 {
+            padding-bottom: 15px;
+            color: #000;
+            overflow: hidden;
+        }
+        h1 {
+            /*padding-top: 40px;*/
+            padding-bottom: 15px;
+            color: #000;
+        }
+        #container {
+            position: relative;
+        }
+        /*#background {
+            position: fixed;
+            top: 0; left: 525px; right: 0; bottom: 0;
+            background: #f5f5ff;
+            border-left: 1px solid #e5e5ee;
+            z-index: -1;
+        }*/
+        #jump_to, #jump_page {
+            background: white;
+            -webkit-box-shadow: 0 0 25px #777; -moz-box-shadow: 0 0 25px #777;
+            -webkit-border-bottom-left-radius: 5px; -moz-border-radius-bottomleft: 5px;
+            font: 10px Arial;
+            text-transform: uppercase;
+            cursor: pointer;
+            text-align: right;
+        }
+        #jump_to, #jump_wrapper {
+            position: fixed;
+            right: 0; top: 0;
+            padding: 5px 10px;
+        }
+        #jump_wrapper {
+            padding: 0;
+            display: none;
+        }
+        #jump_to:hover #jump_wrapper {
+            display: block;
+        }
+        #jump_page {
+            padding: 5px 0 3px;
+            margin: 0 0 25px 25px;
+        }
+        #jump_page .source {
+            display: block;
+            padding: 5px 10px;
+            text-decoration: none;
+            border-top: 1px solid #eee;
+        }
+        #jump_page .source:hover {
+            background: #f5f5ff;
+        }
+        #jump_page .source:first-child {
+        }
+        table td {
+            border: 0;
+            outline: 0;
+        }
+        td.docs, th.docs {
+            max-width: 450px;
+            min-width: 450px;
+            min-height: 5px;
+            padding: 10px 25px 1px 50px;
+            overflow-x: hidden;
+            vertical-align: top;
+            text-align: left;
+        }
+        .docs pre {
+            margin: 15px 0 15px;
+            padding-left: 15px;
+        }
+        .docs p tt, .docs p code, .doc code {
+            background: #f8f8ff;
+            border: 1px solid #dedede;
+            font-size: 12px;
+            padding: 0 0.2em;
+        }
+        .pilwrap {
+            position: relative;
+        }
+        .pilcrow {
+            font: 12px Arial;
+            text-decoration: none;
+            color: #454545;
+            position: absolute;
+            top: 3px; left: -20px;
+            padding: 1px 2px;
+            opacity: 0;
+            -webkit-transition: opacity 0.2s linear;
+        }
+        td.docs:hover .pilcrow {
+            opacity: 1;
+        }
+        td.code, th.code {
+            padding: 10px 10px 10px 50px;
+            width: 100%;
+            vertical-align: top;
+            background: #f5f5ff;
+            border-left: 1px solid #e5e5ee;
+        }
+        pre, tt, code {
+            font-size: 12px; line-height: 18px;
+            font-family: Menlo, Monaco, Consolas, "Lucida Console", monospace;
+            margin: 0; padding: 0;
+        }
+
+        /*---------------------- Prettify Syntax Highlighting -----------------------------*/
+        .str{color:#080}.kwd{color:#008}.com{color:#800}.typ{color:#606}.lit{color:#066}.pun{color:#660}.pln{color:#000}.tag{color:#008}.atn{color:#606}.atv{color:#080}.dec{color:#606}pre.prettyprint{padding:2px;border:1px solid #888}ol.linenums{margin-top:0;margin-bottom:0}li.L0,li.L1,li.L2,li.L3,li.L5,li.L6,li.L7,li.L8{list-style:none}li.L1,li.L3,li.L5,li.L7,li.L9{background:#eee}@media print{.str{color:#060}.kwd{color:#006;font-weight:bold}.com{color:#600;font-style:italic}.typ{color:#404;font-weight:bold}.lit{color:#044}.pun{color:#440}.pln{color:#000}.tag{color:#006;font-weight:bold}.atn{color:#404}.atv{color:#060}}
+
+        table.doc { margin-bottom: 20px; }
+        td.doc { border-bottom: 1px dashed #708090; }
+        td.param { font-weight: bold; }
+        td.return { font-weight: bold; text-decoration: underline; }
+    </style>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/prettify/r224/prettify.js" type="text/javascript"></script>
+    <script src="https://google-code-prettify.googlecode.com/svn/trunk/src/lang-scala.js" type="text/javascript"></script>
+</head>
+
+<body onload="prettyPrint()">
+<div id="container">
+    <div id="background"></div>
+    <div id="jump_to">
+        Jump To &hellip;
+        <div id="jump_wrapper">
+            <div id="jump_page">
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/01-intro.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/01-intro.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/02-desugaring.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/02-desugaring.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/03-ae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/03-ae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/04-wae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/04-wae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/05-f1wae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/05-f1wae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/06-fae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/06-fae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/07-lcfae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/07-lcfae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/08-rcfae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/08-rcfae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/09-bcfae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/09-bcfae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/10-gc.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/10-gc.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/11-syntacticvsmeta.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/11-syntacticvsmeta.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/12-churchencoding.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/12-churchencoding.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/13-continuations-1.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/13-continuations-1.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/14-continuations-2.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/14-continuations-2.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/17-firstclasscontinuations.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/17-firstclasscontinuations.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/18-monads.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/18-monads.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/19-monads.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/19-monads.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/20-iomonad.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/20-iomonad.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/21-defunctionalization.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/21-defunctionalization.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/22-typesystems.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/22-typesystems.html
+                </a>
+                
+            </div>
+        </div>
+    </div>
+
+    <table cellpadding="0" cellspacing="0">
+        <thead>
+        <tr>
+            <th class="docs">
+                <h1>11-syntacticvsmeta.scala</h1>
+            </th>
+            <th class="code"></th>
+        </tr>
+        </thead>
+        <tbody>
+        
+        <tr id="section_0">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_0">&#182;</a>
+                </div>
+                
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'></code></pre>
+            </td>
+        </tr>
+        
+        <tr id="section_1">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_1">&#182;</a>
+                </div>
+                <h1>Syntactic interpretation vs meta intepretation</h1>
+<p>For each desired language semantics, there exist many different ways to implement an interpreter in some meta-language to encode this semantics.</p>
+<p>One question that is of particular importance is whether a language feature is implemented by using a corresponding language feature of the meta-language, or whether it is implemented using more primitive language constructs. The first case is called meta-interpretation, the second case syntactic interpretation.</p>
+<p>Meta-interpretation can be convenient if we are not interested in having control over the exact meaning of the construct, or if the way the meta-language handles this construct is just what we want for our object language.  Syntactic interpretation is required if we want to understand what the language feature really means in terms of more primitive constructs, or if we want to implement the language feature differently than the meta language. Of course, if the meta language has no corresponding feature, then we have no choice but to make a syntactic interpretation.</p>
+<p>Our FAE interpreter is a meta-interpreter with respect to many features. For instance, it does not tell us
+<br  />the precision of numbers, or the algorithm for addition
+<br  />how the call stack is managed, e.g. the maximum depth of recursion supported by the interpreter
+<br  />whether/how memory management for closures works (they are objects on the heap!)</p>
+<p>That said, it is possible to make the FAE interpreters still more &ldquo;meta&rdquo;. Here are two examples. Here is a version of FAE that uses a different representation of the program syntax, namely one using meta-language functions to represent object-language functions. This technique is called higher-order abstract syntax, or HOAS. For instance, the function <code>Fun('x, Add('x,5))</code> is now represented as <code>Fun( x =&gt; Add(x,5))</code>.</p>
+<p>The interpreter becomes rather short, because substitution and lexical scoping are now being dealt with by the corresponding meta-level construct.</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'>object HOAS {
+    sealed abstract class Exp
+    case class Num(n: Int) extends Exp
+    case class Id(name: Symbol) extends Exp
+    case class Add(lhs: Exp, rhs: Exp) extends Exp
+    case class Fun(f: Exp =&gt; Exp) extends Exp
+    case class App (funExpr: Exp, argExpr: Exp) extends Exp
+    def eval(e: Exp) : Exp = e match {
+      case Id(v) =&gt; sys.error(&quot;unbound identifier: &quot;+v)
+      case Add(l,r) =&gt; (eval(l), eval(r)) match {
+                         case (Num(x),Num(y)) =&gt; Num(x+y)
+                         case _ =&gt; sys.error(&quot;can only add numbers&quot;)
+                        }
+      case App(f,a) =&gt; eval(f) match {
+         case Fun(f) =&gt; eval( f(eval(a)))
+         case _ =&gt; sys.error(&quot;can only apply functions&quot;)
+      }
+      case _ =&gt; e // numbers and functions evaluate to themselves
+    }      
+}
+
+</code></pre>
+            </td>
+        </tr>
+        
+        <tr id="section_2">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_2">&#182;</a>
+                </div>
+                <p>A different way to use meta-level functions in the interpreter is to represent object-level closures by meta-level closures. Notice that this interpreter has no control anymore about scoping;  rather, it is completely inherited from the meta language.</p>
+<p>A particularly pleasing and important property of this interpreter is that it is <em>compositional</em>, meaning that all recursive calls of eval are only on subparts of the original expression. This means that it becomes particularly easy to reason about program equivalence in the object language in terms of program equivalence in the meta language: Two object language expressions are equivalent if their &ldquo;denotations&rdquo; as meta-level expressions are equivalent in the meta-level.</p>
+<p>Compositionality is the cornerstone of denotational semantics.  A denotational semantics can be thought of as a compositional interpreter in which the meta-language is mathematics.</p>
+<p>Compositionality also has a rather practical side-effect: It means that we can implement the interpreter in the internal visitor style that  we learned about in the first lecture (recall that the internal visitor  style enforces compositionality)</p>
+<p>Recommended exercise: Re-implement the interpreter as an internal visitor.</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'>sealed abstract class Exp
+case class Num(n: Int) extends Exp
+case class Id(name: Symbol) extends Exp
+case class Add(lhs: Exp, rhs: Exp) extends Exp
+case class Fun(param: Symbol, body: Exp) extends Exp
+case class App (funExpr: Exp, argExpr: Exp) extends Exp
+
+object Compositional { 
+    sealed abstract class Value
+    type Env = Map[Symbol, Value]
+    case class NumV(n: Int) extends Value
+    case class FunV(f: Value =&gt; Value) extends Value
+
+    def eval(e: Exp) : Env =&gt; Value = e match {
+      case Num(n: Int) =&gt; (env) =&gt; NumV(n)
+      case Id(x) =&gt; env =&gt; env(x)
+      case Add(l,r) =&gt; { (env) =&gt;
+        (eval(l)(env),  eval(r)(env)) match {
+          case (NumV(v1),NumV(v2)) =&gt; NumV(v1+v2)
+          case _ =&gt; sys.error(&quot;can only add numbers&quot;)
+        }
+      }
+      case Fun(param,body) =&gt; (env) =&gt; FunV( (v) =&gt; eval(body)(env + (param -&gt; v)))
+      case App(f,a) =&gt; (env) =&gt; (eval(f)(env), eval(a)(env)) match {
+        // Use environment stored in closure to realize proper lexical scoping!
+        case (FunV(g),arg) =&gt; g(arg)
+        case _ =&gt; sys.error(&quot;can only apply functions&quot;)
+      }
+    }
+}
+
+</code></pre>
+            </td>
+        </tr>
+        
+        <tr id="section_3">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_3">&#182;</a>
+                </div>
+                <p>For comparison, here is our original FAE interpreter.</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'>object FAE {
+    sealed abstract class Value
+    type Env = Map[Symbol, Value]
+    case class NumV(n: Int) extends Value
+    case class ClosureV(f: Fun, env: Env) extends Value
+
+    def eval(e: Exp, env: Env) : Value = e match {
+      case Num(n: Int) =&gt; NumV(n)
+      case Id(x) =&gt; env(x)
+      case Add(l,r) =&gt; {
+        (eval(l,env), eval(r,env)) match {
+          case (NumV(v1),NumV(v2)) =&gt; NumV(v1+v2)
+          case _ =&gt; sys.error(&quot;can only add numbers&quot;)
+        }
+      }
+      case f@Fun(param,body) =&gt; ClosureV(f, env)
+      case App(f,a) =&gt; eval(f,env) match {
+        // Use environment stored in closure to realize proper lexical scoping!
+        case ClosureV(f,closureEnv) =&gt; eval(f.body, closureEnv + (f.param -&gt; eval(a,env)))
+        case _ =&gt; sys.error(&quot;can only apply functions&quot;)
+      }
+    }
+}
+
+</code></pre>
+            </td>
+        </tr>
+        
+        <tr id="section_4">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_4">&#182;</a>
+                </div>
+                <p>We will soon learn about ways to make FAE more syntactic in various ways. For instance, we will no longer rely on call-stack management of the meta-language, or the existence of higher-order functions.</p>
+<p>One dimension in which the interpreter could easily be made more syntactic is the treatment of numbers and arithmetic. For instance, we could represent numbers as sequences of digits instead of Scala numbers.</p>
+<p>Another aspect in which our FAE interpreter relies on the host language is memory management. This is particularly relevant for environments stored inside closures. These environments cannot be organized on the call stack and hence need memory management. Since we are using Scala references to refer to environments, environments that are no longer needed are collected by the Scala (or rather, Java) virtual machine.</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'></code></pre>
+            </td>
+        </tr>
+        
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

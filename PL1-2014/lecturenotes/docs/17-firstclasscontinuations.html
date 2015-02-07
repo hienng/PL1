@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>17-firstclasscontinuations.scala</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <style type="text/css">
+        /*--------------------- Layout and Typography ----------------------------*/
+        body {
+            font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, FreeSerif, serif;
+            font-size: 15px;
+            line-height: 22px;
+            color: #252519;
+            margin: 0; padding: 0;
+        }
+        a {
+            color: #261a3b;
+        }
+        a:visited {
+            color: #261a3b;
+        }
+        p {
+            margin: 0 0 15px 0;
+        }
+        h4, h5, h6 {
+            color: #333;
+            padding: 6px 0 6px 0;
+            font-size: 13px;
+        }
+        h2, h3 {
+            padding-bottom: 15px;
+            color: #000;
+            overflow: hidden;
+        }
+        h1 {
+            /*padding-top: 40px;*/
+            padding-bottom: 15px;
+            color: #000;
+        }
+        #container {
+            position: relative;
+        }
+        /*#background {
+            position: fixed;
+            top: 0; left: 525px; right: 0; bottom: 0;
+            background: #f5f5ff;
+            border-left: 1px solid #e5e5ee;
+            z-index: -1;
+        }*/
+        #jump_to, #jump_page {
+            background: white;
+            -webkit-box-shadow: 0 0 25px #777; -moz-box-shadow: 0 0 25px #777;
+            -webkit-border-bottom-left-radius: 5px; -moz-border-radius-bottomleft: 5px;
+            font: 10px Arial;
+            text-transform: uppercase;
+            cursor: pointer;
+            text-align: right;
+        }
+        #jump_to, #jump_wrapper {
+            position: fixed;
+            right: 0; top: 0;
+            padding: 5px 10px;
+        }
+        #jump_wrapper {
+            padding: 0;
+            display: none;
+        }
+        #jump_to:hover #jump_wrapper {
+            display: block;
+        }
+        #jump_page {
+            padding: 5px 0 3px;
+            margin: 0 0 25px 25px;
+        }
+        #jump_page .source {
+            display: block;
+            padding: 5px 10px;
+            text-decoration: none;
+            border-top: 1px solid #eee;
+        }
+        #jump_page .source:hover {
+            background: #f5f5ff;
+        }
+        #jump_page .source:first-child {
+        }
+        table td {
+            border: 0;
+            outline: 0;
+        }
+        td.docs, th.docs {
+            max-width: 450px;
+            min-width: 450px;
+            min-height: 5px;
+            padding: 10px 25px 1px 50px;
+            overflow-x: hidden;
+            vertical-align: top;
+            text-align: left;
+        }
+        .docs pre {
+            margin: 15px 0 15px;
+            padding-left: 15px;
+        }
+        .docs p tt, .docs p code, .doc code {
+            background: #f8f8ff;
+            border: 1px solid #dedede;
+            font-size: 12px;
+            padding: 0 0.2em;
+        }
+        .pilwrap {
+            position: relative;
+        }
+        .pilcrow {
+            font: 12px Arial;
+            text-decoration: none;
+            color: #454545;
+            position: absolute;
+            top: 3px; left: -20px;
+            padding: 1px 2px;
+            opacity: 0;
+            -webkit-transition: opacity 0.2s linear;
+        }
+        td.docs:hover .pilcrow {
+            opacity: 1;
+        }
+        td.code, th.code {
+            padding: 10px 10px 10px 50px;
+            width: 100%;
+            vertical-align: top;
+            background: #f5f5ff;
+            border-left: 1px solid #e5e5ee;
+        }
+        pre, tt, code {
+            font-size: 12px; line-height: 18px;
+            font-family: Menlo, Monaco, Consolas, "Lucida Console", monospace;
+            margin: 0; padding: 0;
+        }
+
+        /*---------------------- Prettify Syntax Highlighting -----------------------------*/
+        .str{color:#080}.kwd{color:#008}.com{color:#800}.typ{color:#606}.lit{color:#066}.pun{color:#660}.pln{color:#000}.tag{color:#008}.atn{color:#606}.atv{color:#080}.dec{color:#606}pre.prettyprint{padding:2px;border:1px solid #888}ol.linenums{margin-top:0;margin-bottom:0}li.L0,li.L1,li.L2,li.L3,li.L5,li.L6,li.L7,li.L8{list-style:none}li.L1,li.L3,li.L5,li.L7,li.L9{background:#eee}@media print{.str{color:#060}.kwd{color:#006;font-weight:bold}.com{color:#600;font-style:italic}.typ{color:#404;font-weight:bold}.lit{color:#044}.pun{color:#440}.pln{color:#000}.tag{color:#006;font-weight:bold}.atn{color:#404}.atv{color:#060}}
+
+        table.doc { margin-bottom: 20px; }
+        td.doc { border-bottom: 1px dashed #708090; }
+        td.param { font-weight: bold; }
+        td.return { font-weight: bold; text-decoration: underline; }
+    </style>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/prettify/r224/prettify.js" type="text/javascript"></script>
+    <script src="https://google-code-prettify.googlecode.com/svn/trunk/src/lang-scala.js" type="text/javascript"></script>
+</head>
+
+<body onload="prettyPrint()">
+<div id="container">
+    <div id="background"></div>
+    <div id="jump_to">
+        Jump To &hellip;
+        <div id="jump_wrapper">
+            <div id="jump_page">
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/01-intro.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/01-intro.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/02-desugaring.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/02-desugaring.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/03-ae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/03-ae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/04-wae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/04-wae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/05-f1wae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/05-f1wae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/06-fae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/06-fae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/07-lcfae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/07-lcfae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/08-rcfae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/08-rcfae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/09-bcfae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/09-bcfae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/10-gc.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/10-gc.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/11-syntacticvsmeta.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/11-syntacticvsmeta.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/12-churchencoding.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/12-churchencoding.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/13-continuations-1.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/13-continuations-1.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/14-continuations-2.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/14-continuations-2.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/17-firstclasscontinuations.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/17-firstclasscontinuations.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/18-monads.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/18-monads.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/19-monads.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/19-monads.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/20-iomonad.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/20-iomonad.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/21-defunctionalization.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/21-defunctionalization.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/22-typesystems.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/22-typesystems.html
+                </a>
+                
+            </div>
+        </div>
+    </div>
+
+    <table cellpadding="0" cellspacing="0">
+        <thead>
+        <tr>
+            <th class="docs">
+                <h1>17-firstclasscontinuations.scala</h1>
+            </th>
+            <th class="code"></th>
+        </tr>
+        </thead>
+        <tbody>
+        
+        <tr id="section_0">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_0">&#182;</a>
+                </div>
+                <h1>First-Class Continuations</h1>
+<p>Today's goal is to formalize first-class continuations as illustrated by Scheme's let/cc construct. In the previous lecture we have learned why first class continuations are a powerful language construct. Today we learn the semantics of first-class continuations by extending our interpreter to support letcc. Here is the abstract syntax of the language we want to extend:</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'>sealed abstract class Exp
+case class Num(n: Int) extends Exp
+case class Id(name: Symbol) extends Exp
+case class Add(lhs: Exp, rhs: Exp) extends Exp
+case class Fun(param: Symbol, body: Exp) extends Exp
+implicit def num2exp(n: Int) = Num(n)
+implicit def id2exp(s: Symbol) = Id(s)
+case class App (funExpr: Exp, argExpr: Exp) extends Exp
+
+</code></pre>
+            </td>
+        </tr>
+        
+        <tr id="section_1">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_1">&#182;</a>
+                </div>
+                <p>The abstract syntax of Letcc is as follows:</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'>case class Letcc(param: Symbol, body: Exp) extends Exp
+
+</code></pre>
+            </td>
+        </tr>
+        
+        <tr id="section_2">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_2">&#182;</a>
+                </div>
+                <p>But how do we implement letcc? How do we get hold of the rest of the computation of the object (=interpreted) program?</p>
+<p>One idea would be to CPS-transform the object program. Then we have the current continuation available and could store it in environments etc.</p>
+<p>However, we want to give a direct semantics to first-class continuations, without first  transforming the object program.</p>
+<p>Insight: If we would CPS-transform the interpreter, the continuation of the interpreter also represents, in some way, the continuation of the object program. The difference is that it represents what's left to do in the interpreter and not in the object program. However, what is left in the interpreter <em>is</em> what is left in the object program.</p>
+<p>Hence we are faced with two tasks:</p>
+<ol>
+<li>CPS-transform the interpreter</li>
+<li>add a branch for Letcc to the interpreter.</li>
+</ol>
+<p>Let's start with the standard infrastructure of values and environments.</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'>sealed abstract class Value
+type Env = Map[Symbol, Value]
+case class NumV(n: Int) extends Value
+case class ClosureV(f: Fun, env: Env) extends Value
+
+</code></pre>
+            </td>
+        </tr>
+        
+        <tr id="section_3">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_3">&#182;</a>
+                </div>
+                <p>How do we represent values that represent continuations? Since we want to represent an object language continuation by a meta language continuation, we need to be able to wrap a meta language continuation as an object language value. This continuation will always accept some other object language value:</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'>case class ContV(f: Value =&gt; Nothing) extends Value
+
+</code></pre>
+            </td>
+        </tr>
+        
+        <tr id="section_4">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_4">&#182;</a>
+                </div>
+                <p>We also need a syntactic construct to apply continuations. One way to provide such a construct would be to add a new syntactic category of continuation application. We will instead do what Scheme and other languages also do: We overload the normal function applicaton construct and also use it for application of continuations.</p>
+<p>This means that we will need a case distinction in our interpreter whether the function argument is a closure or a continuation.</p>
+<p>Let's now study the interpreter for our new language. The branches for Num, Id, Add, and Fun are straightforward applications of the CPS transformation technique we already know.</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'>def eval(e: Exp, env: Env, k: Value =&gt; Nothing) : Nothing = e match {
+  case Num(n: Int) =&gt; k(NumV(n))
+  case Id(x) =&gt; k(env(x))
+  case Add(l,r) =&gt; {
+    eval(l,env, lv =&gt; 
+        eval(r,env, rv =&gt;
+          (lv,rv) match {
+            case (NumV(v1), NumV(v2)) =&gt; k(NumV(v1+v2))
+            case _ =&gt; sys.error(&quot;can only add numbers&quot;)
+          }))
+  }
+  case f@Fun(param,body) =&gt; k(ClosureV(f, env))
+  
+  /* In the application case we now need to distinguish whether the first argument
+   * is a closure or a continuation. If it is a continuation, we ignore the
+   * current continuation k and &quot;jump&quot; to the stored continuation by applying the
+   * evaluated continuation argument to it. */
+  case App(f,a) =&gt; eval(f,env, cl =&gt; cl match {
+            case ClosureV(f,closureEnv) =&gt; eval(a,env, av =&gt; eval(f.body, closureEnv + (f.param -&gt; av),k))
+            case ContV(f) =&gt; eval(a,env, av =&gt; f(av))
+            case _ =&gt; sys.error(&quot;can only apply functions&quot;)
+  })
+  /* Letcc is now surprisingly simple: We continue the evaluation in the body in an
+   * extended environment in which param is bound to the current continuation k,
+   * wrapped as a value using ContV. */
+  case Letcc(param,body) =&gt; eval(body, env+(param -&gt; ContV(k)), k)  
+}
+
+</code></pre>
+            </td>
+        </tr>
+        
+        <tr id="section_5">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_5">&#182;</a>
+                </div>
+                <p>To make it easier to experiment with the interpreter this code provides the right initialization to eval. We have to give eval a continuation which represents the rest of the computation after eval is done. A small technical problem arises due to our  usage of the return type &ldquo;Nothing&rdquo; for continuations, to emphasize that they do not return: The only way to implement a value that has this type is a function that does indeed not return. We do so by letting this function throw an exception. To keep track of the returned value we store it temporarily in a variable, catch the exception, and return the stored value.</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'>def starteval(e: Exp) : Value = {
+  var res : Value = null
+  val s : Value =&gt; Nothing = (v) =&gt; { res = v; sys.error(&quot;program terminated&quot;) }
+  try { eval(e, Map.empty, s) } catch { case e:Throwable =&gt; Unit }
+  res
+}
+
+</code></pre>
+            </td>
+        </tr>
+        
+        <tr id="section_6">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_6">&#182;</a>
+                </div>
+                <p>Finally a small test of Letcc.</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'>val testprog = Add(1, Letcc('k, Add(2, App('k, 3))))
+
+assert(starteval(testprog) == NumV(4))
+</code></pre>
+            </td>
+        </tr>
+        
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

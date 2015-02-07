@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>12-churchencoding.scala</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <style type="text/css">
+        /*--------------------- Layout and Typography ----------------------------*/
+        body {
+            font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, FreeSerif, serif;
+            font-size: 15px;
+            line-height: 22px;
+            color: #252519;
+            margin: 0; padding: 0;
+        }
+        a {
+            color: #261a3b;
+        }
+        a:visited {
+            color: #261a3b;
+        }
+        p {
+            margin: 0 0 15px 0;
+        }
+        h4, h5, h6 {
+            color: #333;
+            padding: 6px 0 6px 0;
+            font-size: 13px;
+        }
+        h2, h3 {
+            padding-bottom: 15px;
+            color: #000;
+            overflow: hidden;
+        }
+        h1 {
+            /*padding-top: 40px;*/
+            padding-bottom: 15px;
+            color: #000;
+        }
+        #container {
+            position: relative;
+        }
+        /*#background {
+            position: fixed;
+            top: 0; left: 525px; right: 0; bottom: 0;
+            background: #f5f5ff;
+            border-left: 1px solid #e5e5ee;
+            z-index: -1;
+        }*/
+        #jump_to, #jump_page {
+            background: white;
+            -webkit-box-shadow: 0 0 25px #777; -moz-box-shadow: 0 0 25px #777;
+            -webkit-border-bottom-left-radius: 5px; -moz-border-radius-bottomleft: 5px;
+            font: 10px Arial;
+            text-transform: uppercase;
+            cursor: pointer;
+            text-align: right;
+        }
+        #jump_to, #jump_wrapper {
+            position: fixed;
+            right: 0; top: 0;
+            padding: 5px 10px;
+        }
+        #jump_wrapper {
+            padding: 0;
+            display: none;
+        }
+        #jump_to:hover #jump_wrapper {
+            display: block;
+        }
+        #jump_page {
+            padding: 5px 0 3px;
+            margin: 0 0 25px 25px;
+        }
+        #jump_page .source {
+            display: block;
+            padding: 5px 10px;
+            text-decoration: none;
+            border-top: 1px solid #eee;
+        }
+        #jump_page .source:hover {
+            background: #f5f5ff;
+        }
+        #jump_page .source:first-child {
+        }
+        table td {
+            border: 0;
+            outline: 0;
+        }
+        td.docs, th.docs {
+            max-width: 450px;
+            min-width: 450px;
+            min-height: 5px;
+            padding: 10px 25px 1px 50px;
+            overflow-x: hidden;
+            vertical-align: top;
+            text-align: left;
+        }
+        .docs pre {
+            margin: 15px 0 15px;
+            padding-left: 15px;
+        }
+        .docs p tt, .docs p code, .doc code {
+            background: #f8f8ff;
+            border: 1px solid #dedede;
+            font-size: 12px;
+            padding: 0 0.2em;
+        }
+        .pilwrap {
+            position: relative;
+        }
+        .pilcrow {
+            font: 12px Arial;
+            text-decoration: none;
+            color: #454545;
+            position: absolute;
+            top: 3px; left: -20px;
+            padding: 1px 2px;
+            opacity: 0;
+            -webkit-transition: opacity 0.2s linear;
+        }
+        td.docs:hover .pilcrow {
+            opacity: 1;
+        }
+        td.code, th.code {
+            padding: 10px 10px 10px 50px;
+            width: 100%;
+            vertical-align: top;
+            background: #f5f5ff;
+            border-left: 1px solid #e5e5ee;
+        }
+        pre, tt, code {
+            font-size: 12px; line-height: 18px;
+            font-family: Menlo, Monaco, Consolas, "Lucida Console", monospace;
+            margin: 0; padding: 0;
+        }
+
+        /*---------------------- Prettify Syntax Highlighting -----------------------------*/
+        .str{color:#080}.kwd{color:#008}.com{color:#800}.typ{color:#606}.lit{color:#066}.pun{color:#660}.pln{color:#000}.tag{color:#008}.atn{color:#606}.atv{color:#080}.dec{color:#606}pre.prettyprint{padding:2px;border:1px solid #888}ol.linenums{margin-top:0;margin-bottom:0}li.L0,li.L1,li.L2,li.L3,li.L5,li.L6,li.L7,li.L8{list-style:none}li.L1,li.L3,li.L5,li.L7,li.L9{background:#eee}@media print{.str{color:#060}.kwd{color:#006;font-weight:bold}.com{color:#600;font-style:italic}.typ{color:#404;font-weight:bold}.lit{color:#044}.pun{color:#440}.pln{color:#000}.tag{color:#006;font-weight:bold}.atn{color:#404}.atv{color:#060}}
+
+        table.doc { margin-bottom: 20px; }
+        td.doc { border-bottom: 1px dashed #708090; }
+        td.param { font-weight: bold; }
+        td.return { font-weight: bold; text-decoration: underline; }
+    </style>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/prettify/r224/prettify.js" type="text/javascript"></script>
+    <script src="https://google-code-prettify.googlecode.com/svn/trunk/src/lang-scala.js" type="text/javascript"></script>
+</head>
+
+<body onload="prettyPrint()">
+<div id="container">
+    <div id="background"></div>
+    <div id="jump_to">
+        Jump To &hellip;
+        <div id="jump_wrapper">
+            <div id="jump_page">
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/01-intro.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/01-intro.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/02-desugaring.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/02-desugaring.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/03-ae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/03-ae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/04-wae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/04-wae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/05-f1wae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/05-f1wae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/06-fae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/06-fae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/07-lcfae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/07-lcfae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/08-rcfae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/08-rcfae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/09-bcfae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/09-bcfae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/10-gc.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/10-gc.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/11-syntacticvsmeta.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/11-syntacticvsmeta.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/12-churchencoding.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/12-churchencoding.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/13-continuations-1.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/13-continuations-1.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/14-continuations-2.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/14-continuations-2.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/17-firstclasscontinuations.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/17-firstclasscontinuations.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/18-monads.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/18-monads.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/19-monads.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/19-monads.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/20-iomonad.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/20-iomonad.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/21-defunctionalization.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/21-defunctionalization.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/22-typesystems.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/22-typesystems.html
+                </a>
+                
+            </div>
+        </div>
+    </div>
+
+    <table cellpadding="0" cellspacing="0">
+        <thead>
+        <tr>
+            <th class="docs">
+                <h1>12-churchencoding.scala</h1>
+            </th>
+            <th class="code"></th>
+        </tr>
+        </thead>
+        <tbody>
+        
+        <tr id="section_0">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_0">&#182;</a>
+                </div>
+                <h1>Church Encoding</h1>
+<p>Today we shrink our language. It does not seem to be big, but today we want to  illustrate how powerful our core language, the lambda calculus, is. Here is a shrinked version of FAE that does not even have numbers anymore. For testing purposes, we introduce a new expression <code>PrintDot</code> whose semantics is to print a dot on the screen.</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'>sealed abstract class Exp
+case class Id(name: Symbol) extends Exp
+implicit def id2exp(s: Symbol) = Id(s)
+case class Fun(param: Symbol, body: Exp) extends Exp
+case class App (funExpr: Exp, argExpr: Exp) extends Exp
+case class PrintDot() extends Exp
+
+abstract class Value // the only values are closures
+type Env = Map[Symbol, Value]
+case class ClosureV(f:Fun, env:Env) extends Value
+
+</code></pre>
+            </td>
+        </tr>
+        
+        <tr id="section_1">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_1">&#182;</a>
+                </div>
+                <p>Notice that the only values in this language are closures. This means that there cannot be the situation anymore that we expect, say, a number but get in fact a closure. Hence, this language has the fascinating property that  no dynamic type errors can occur.</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'>def eval(e: Exp, env: Env) : Value = e match {
+  // We give the identity function as dummy value for PrintDot
+  case PrintDot() =&gt; print(&quot;.&quot;); ClosureV(Fun('x,'x), Map.empty) 
+  case Id(x) =&gt; env(x)
+  case f@Fun(param,body) =&gt; ClosureV(f, env)
+  case App(f,a) =&gt; eval(f,env) match {
+    case ClosureV(f,closureEnv) =&gt; eval(f.body, closureEnv + (f.param -&gt; eval(a,env)))
+  }
+}
+
+</code></pre>
+            </td>
+        </tr>
+        
+        <tr id="section_2">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_2">&#182;</a>
+                </div>
+                <p>Now we want to illustrate that we can, in principle, bootstrap a full programming language from this small core. To do so, we use the technique of Church encoding. This means that each datum is represented by its own fold function.</p>
+<h2>Church Encoding of Booleans</h2>
+<p>Let's start with booleans and boolean arithmetic.</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'>val f = Fun('t, Fun('f, 'f))  // false
+val t = Fun('t, Fun('f, 't))  // true
+val and = Fun('a, Fun('b, App(App('a, 'b),'a)))
+val or = Fun('a, Fun('b, App(App('a, 'a), 'b)))
+val not = Fun('a, Fun('t, Fun('f, App(App('a,'f),'t))))
+
+</code></pre>
+            </td>
+        </tr>
+        
+        <tr id="section_3">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_3">&#182;</a>
+                </div>
+                <p>We can now write our own control structures, such as if/then/else</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'>val ifthenelse = Fun('cond, Fun('t, Fun('f, App(App('cond, 't), 'f))))
+
+</code></pre>
+            </td>
+        </tr>
+        
+        <tr id="section_4">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_4">&#182;</a>
+                </div>
+                <h2>Church Encoding of Numbers</h2>
+<p>Let's now consider Numbers. We encode them as Peano numbers.  These encodings of numbers are often called <em>Church numbers</em>.</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'>val zero = Fun('s, Fun('z, 'z))
+val succ = Fun('n, Fun('s, Fun('z, App('s, App(App('n, 's),'z)))))
+val one = App(succ, zero)
+val two = App(succ, one)
+val three = App(succ, two)
+val add  = Fun('a, Fun('b, Fun('s, Fun('z, App(App('a,'s), App(App('b, 's),'z))))))
+val mult = Fun('a, Fun('b, Fun('s, Fun('z, App(App('a, App('b,'s)), 'z)))))
+val exp  = Fun('a, Fun('b, App(App('b, App(mult, 'a)), one)))
+val iszero = Fun('a, App(App('a, Fun('x, f)), t))
+</code></pre>
+            </td>
+        </tr>
+        
+        <tr id="section_5">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_5">&#182;</a>
+                </div>
+                <p>The predecessor function is more complicated (why?). We do not show it here.</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'>val printnum = Fun('a, App(App('a, Fun('x, PrintDot())), f))
+
+</code></pre>
+            </td>
+        </tr>
+        
+        <tr id="section_6">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_6">&#182;</a>
+                </div>
+                <h2>Church encoding of lists</h2>
+<p>Again straightforward, except &ldquo;tail&rdquo;, which we do not show here. It needs the same kind of trick (called &ldquo;pairing trick&rdquo;) as the predecessor function.</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'>val emptylist = Fun('c, Fun('e, 'e))
+val cons = Fun('h, Fun('r, Fun('c, Fun('e, App(App('c, 'h), App(App('r,'c),'e))))))
+val head = Fun('l, App(App('l, Fun('h, Fun('t, 'h))), f))
+
+</code></pre>
+            </td>
+        </tr>
+        
+        <tr id="section_7">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_7">&#182;</a>
+                </div>
+                <p>For instance, we can multiply all numbers in a list</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'>val multlist = Fun('l, App(App('l, mult), one))
+/* Here is the list 3,2,3 */
+val list323 = App(App(cons, three), App(App(cons, two), App(App(cons,three),emptylist)))
+
+val test = App(printnum, App(multlist, list323))
+/* Calling exec should yield 18 dots before the dummy result */
+def exec = eval(test, Map.empty) 
+
+</code></pre>
+            </td>
+        </tr>
+        
+        <tr id="section_8">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_8">&#182;</a>
+                </div>
+                <p>Topic for class discussion: Can we do these encodings directly in Scala or Haskell?</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'></code></pre>
+            </td>
+        </tr>
+        
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

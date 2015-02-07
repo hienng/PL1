@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>22-typesystems.scala</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <style type="text/css">
+        /*--------------------- Layout and Typography ----------------------------*/
+        body {
+            font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, FreeSerif, serif;
+            font-size: 15px;
+            line-height: 22px;
+            color: #252519;
+            margin: 0; padding: 0;
+        }
+        a {
+            color: #261a3b;
+        }
+        a:visited {
+            color: #261a3b;
+        }
+        p {
+            margin: 0 0 15px 0;
+        }
+        h4, h5, h6 {
+            color: #333;
+            padding: 6px 0 6px 0;
+            font-size: 13px;
+        }
+        h2, h3 {
+            padding-bottom: 15px;
+            color: #000;
+            overflow: hidden;
+        }
+        h1 {
+            /*padding-top: 40px;*/
+            padding-bottom: 15px;
+            color: #000;
+        }
+        #container {
+            position: relative;
+        }
+        /*#background {
+            position: fixed;
+            top: 0; left: 525px; right: 0; bottom: 0;
+            background: #f5f5ff;
+            border-left: 1px solid #e5e5ee;
+            z-index: -1;
+        }*/
+        #jump_to, #jump_page {
+            background: white;
+            -webkit-box-shadow: 0 0 25px #777; -moz-box-shadow: 0 0 25px #777;
+            -webkit-border-bottom-left-radius: 5px; -moz-border-radius-bottomleft: 5px;
+            font: 10px Arial;
+            text-transform: uppercase;
+            cursor: pointer;
+            text-align: right;
+        }
+        #jump_to, #jump_wrapper {
+            position: fixed;
+            right: 0; top: 0;
+            padding: 5px 10px;
+        }
+        #jump_wrapper {
+            padding: 0;
+            display: none;
+        }
+        #jump_to:hover #jump_wrapper {
+            display: block;
+        }
+        #jump_page {
+            padding: 5px 0 3px;
+            margin: 0 0 25px 25px;
+        }
+        #jump_page .source {
+            display: block;
+            padding: 5px 10px;
+            text-decoration: none;
+            border-top: 1px solid #eee;
+        }
+        #jump_page .source:hover {
+            background: #f5f5ff;
+        }
+        #jump_page .source:first-child {
+        }
+        table td {
+            border: 0;
+            outline: 0;
+        }
+        td.docs, th.docs {
+            max-width: 450px;
+            min-width: 450px;
+            min-height: 5px;
+            padding: 10px 25px 1px 50px;
+            overflow-x: hidden;
+            vertical-align: top;
+            text-align: left;
+        }
+        .docs pre {
+            margin: 15px 0 15px;
+            padding-left: 15px;
+        }
+        .docs p tt, .docs p code, .doc code {
+            background: #f8f8ff;
+            border: 1px solid #dedede;
+            font-size: 12px;
+            padding: 0 0.2em;
+        }
+        .pilwrap {
+            position: relative;
+        }
+        .pilcrow {
+            font: 12px Arial;
+            text-decoration: none;
+            color: #454545;
+            position: absolute;
+            top: 3px; left: -20px;
+            padding: 1px 2px;
+            opacity: 0;
+            -webkit-transition: opacity 0.2s linear;
+        }
+        td.docs:hover .pilcrow {
+            opacity: 1;
+        }
+        td.code, th.code {
+            padding: 10px 10px 10px 50px;
+            width: 100%;
+            vertical-align: top;
+            background: #f5f5ff;
+            border-left: 1px solid #e5e5ee;
+        }
+        pre, tt, code {
+            font-size: 12px; line-height: 18px;
+            font-family: Menlo, Monaco, Consolas, "Lucida Console", monospace;
+            margin: 0; padding: 0;
+        }
+
+        /*---------------------- Prettify Syntax Highlighting -----------------------------*/
+        .str{color:#080}.kwd{color:#008}.com{color:#800}.typ{color:#606}.lit{color:#066}.pun{color:#660}.pln{color:#000}.tag{color:#008}.atn{color:#606}.atv{color:#080}.dec{color:#606}pre.prettyprint{padding:2px;border:1px solid #888}ol.linenums{margin-top:0;margin-bottom:0}li.L0,li.L1,li.L2,li.L3,li.L5,li.L6,li.L7,li.L8{list-style:none}li.L1,li.L3,li.L5,li.L7,li.L9{background:#eee}@media print{.str{color:#060}.kwd{color:#006;font-weight:bold}.com{color:#600;font-style:italic}.typ{color:#404;font-weight:bold}.lit{color:#044}.pun{color:#440}.pln{color:#000}.tag{color:#006;font-weight:bold}.atn{color:#404}.atv{color:#060}}
+
+        table.doc { margin-bottom: 20px; }
+        td.doc { border-bottom: 1px dashed #708090; }
+        td.param { font-weight: bold; }
+        td.return { font-weight: bold; text-decoration: underline; }
+    </style>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/prettify/r224/prettify.js" type="text/javascript"></script>
+    <script src="https://google-code-prettify.googlecode.com/svn/trunk/src/lang-scala.js" type="text/javascript"></script>
+</head>
+
+<body onload="prettyPrint()">
+<div id="container">
+    <div id="background"></div>
+    <div id="jump_to">
+        Jump To &hellip;
+        <div id="jump_wrapper">
+            <div id="jump_page">
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/01-intro.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/01-intro.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/02-desugaring.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/02-desugaring.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/03-ae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/03-ae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/04-wae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/04-wae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/05-f1wae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/05-f1wae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/06-fae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/06-fae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/07-lcfae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/07-lcfae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/08-rcfae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/08-rcfae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/09-bcfae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/09-bcfae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/10-gc.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/10-gc.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/11-syntacticvsmeta.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/11-syntacticvsmeta.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/12-churchencoding.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/12-churchencoding.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/13-continuations-1.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/13-continuations-1.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/14-continuations-2.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/14-continuations-2.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/17-firstclasscontinuations.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/17-firstclasscontinuations.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/18-monads.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/18-monads.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/19-monads.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/19-monads.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/20-iomonad.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/20-iomonad.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/21-defunctionalization.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/21-defunctionalization.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/22-typesystems.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/22-typesystems.html
+                </a>
+                
+            </div>
+        </div>
+    </div>
+
+    <table cellpadding="0" cellspacing="0">
+        <thead>
+        <tr>
+            <th class="docs">
+                <h1>22-typesystems.scala</h1>
+            </th>
+            <th class="code"></th>
+        </tr>
+        </thead>
+        <tbody>
+        
+        <tr id="section_0">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_0">&#182;</a>
+                </div>
+                <h1>Type Systems</h1>
+<p>The aim of type systems is to prevent certain classes of errors to occur at runtime. Examples of such errors include the addition of a number to a function, or the usage of a free variable. There can be many different type systems for the same programming language.</p>
+<p>A sound type systems guarantees that the errors that the type system aims to prevent will not occur in <em>any</em> run of the program. This is different from testing, in which only a single program run on some particular input data is considered.</p>
+<p>Since - by Rice's theorem - all interesting properties of the runtime behavior of a program (in a TUring complete language) are undecidable, type systems are necessarily imperfect. But they are usually designed in such a way that the errors are directed: Each type system unfairly rejects some programs that could be executed without runtime errors. But programs that are accepted by the type system will never produce one of the precluded runtime errors. The latter property is usually called <em>soundness</em>, the former property <em>completeness</em>. Hence we can say that most type systems are sound but not complete. One also often says that type systems are <em>conservative</em>. A conservative approximation of the behavior of a program is one that considers all possible program runs but also some impossible program runs - an overapproximation.</p>
+<p>Well-typedness is usually a context-sensitive property, hence it cannot be expressed in the (context-free) grammar of the language but is defined as an additional filter which rules out some syntactically correct programs.</p>
+<p>Let's look at a small toy language to illustrate type systems:</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'>sealed abstract class Exp
+case class Num(n: Int) extends Exp
+case class Add(lhs: Exp, rhs: Exp) extends Exp
+case class Bool(x: Boolean) extends Exp
+case class If(cond: Exp, then: Exp, els: Exp) extends Exp
+implicit def num2exp(n: Int) = Num(n)
+implicit def bool2exp(x: Boolean) = Bool(x)
+
+
+def eval(e: Exp) : Exp = e match {
+  case Add(l,r) =&gt; (eval(l), eval(r)) match {
+                     case (Num(x),Num(y)) =&gt; Num(x+y)
+                     case _ =&gt; sys.error(&quot;can only add numbers&quot;)
+                    }
+  case If(cond,then,els) =&gt;
+    eval(cond) match {
+      case Bool(true) =&gt; eval(then)
+      case Bool(false) =&gt; eval(els)
+      case _ =&gt; sys.error(&quot;Condition must be boolean&quot;)
+    }                    
+  case _ =&gt; e  
+}                
+
+</code></pre>
+            </td>
+        </tr>
+        
+        <tr id="section_1">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_1">&#182;</a>
+                </div>
+                <p>In this language, we can see that two different types of runtime errors can occur:
+<br  />An addition where one of the operands is not a number, or an if-expression where the condition
+<br  />does not evaluate to a boolean.</p>
+<p>Here are a few syntactically correct programs. Only the first three execute correctly. The
+<br  />other ones yield runtime errors.</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'>val ex1 = Add(3,5)
+val ex2 = If(true, 7, 5)
+val ex2b = If(true, 7, true)
+val ex3 = If(Add(3,4), 7, true)
+val ex4 = Add(true,3)
+
+</code></pre>
+            </td>
+        </tr>
+        
+        <tr id="section_2">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_2">&#182;</a>
+                </div>
+                <p>Let's now design a type system for this language. Most type systems entail a classification of the values into different types. In this type system, we choose to define two types, one called BoolType and one called IntType.</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'>sealed abstract class Type
+case class BoolType() extends Type
+case class IntType() extends Type
+
+</code></pre>
+            </td>
+        </tr>
+        
+        <tr id="section_3">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_3">&#182;</a>
+                </div>
+                <p>A type checker is a compositional assignment of types (or type errors) to expressions. Compositionality means that the type of a composite expression is computed from the type of its subexpressions. Compositionality is quite important for reasoning about types.</p>
+<p>In this case, the type checker is a rather straightforward structural recursion ( = compositionality) over expressions.</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'>def typeCheck(e: Exp) : Type = e match {
+  case Num(n) =&gt; IntType()
+  case Bool(x) =&gt; BoolType()
+  case Add(a,b) =&gt; (typeCheck(a),typeCheck(b)) match {
+    case (IntType(),IntType()) =&gt; IntType()
+    case _ =&gt; sys.error(&quot;Type Error in addition&quot;)
+  }
+  case If(c,t,e) =&gt; (typeCheck(c), typeCheck(t), typeCheck(e)) match {
+    case (BoolType(),t1,t2) =&gt; if (t1 == t2) t1 else sys.error(&quot;type error in if&quot;)
+    case _ =&gt; sys.error(&quot;Type error in If&quot;)
+  }
+}
+
+</code></pre>
+            </td>
+        </tr>
+        
+        <tr id="section_4">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_4">&#182;</a>
+                </div>
+                <h2>Type Soundness</h2>
+<p>If we typecheck the examples from above with the algorithm, we can see that it rejects all programs that lead to runtime errors, and it also (unfairly) rejects one program that can be executed without error. Hence the type system is conservative, as expected.</p>
+<p>We can now say more precisely what we mean by soundness of the type checker, namely that it correctly predicts the kind of value that the interpreter will produce:</p>
+<p>If <code>e</code> is an expression and <code>typeCheck(e)</code> yields a type <code>t</code>, then <code>eval(e)</code> yields a value <code>v</code> such that <code>typeCheck(v) == t</code>.</p>
+<p>This statement of type soundness has to be changed a bit when we have a programming language with non-terminating programs. Then it will have the following form:</p>
+<p>If <code>e</code> is an expression and <code>typeCheck(e)</code> yields a type <code>t</code>, then <code>eval(e)</code> either diverges, or it yields a value <code>v</code> such that <code>typeCheck(v) == t</code>, but it does not terminate with a runtime error.</p>
+<p>In the most general case, we also have runtime errors that are not captured by the type system. In this case we have to restrict the last part of the sentence to those runtime errors that are captured by the type system.</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'></code></pre>
+            </td>
+        </tr>
+        
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

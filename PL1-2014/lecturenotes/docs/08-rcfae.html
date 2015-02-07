@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>08-rcfae.scala</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <style type="text/css">
+        /*--------------------- Layout and Typography ----------------------------*/
+        body {
+            font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, FreeSerif, serif;
+            font-size: 15px;
+            line-height: 22px;
+            color: #252519;
+            margin: 0; padding: 0;
+        }
+        a {
+            color: #261a3b;
+        }
+        a:visited {
+            color: #261a3b;
+        }
+        p {
+            margin: 0 0 15px 0;
+        }
+        h4, h5, h6 {
+            color: #333;
+            padding: 6px 0 6px 0;
+            font-size: 13px;
+        }
+        h2, h3 {
+            padding-bottom: 15px;
+            color: #000;
+            overflow: hidden;
+        }
+        h1 {
+            /*padding-top: 40px;*/
+            padding-bottom: 15px;
+            color: #000;
+        }
+        #container {
+            position: relative;
+        }
+        /*#background {
+            position: fixed;
+            top: 0; left: 525px; right: 0; bottom: 0;
+            background: #f5f5ff;
+            border-left: 1px solid #e5e5ee;
+            z-index: -1;
+        }*/
+        #jump_to, #jump_page {
+            background: white;
+            -webkit-box-shadow: 0 0 25px #777; -moz-box-shadow: 0 0 25px #777;
+            -webkit-border-bottom-left-radius: 5px; -moz-border-radius-bottomleft: 5px;
+            font: 10px Arial;
+            text-transform: uppercase;
+            cursor: pointer;
+            text-align: right;
+        }
+        #jump_to, #jump_wrapper {
+            position: fixed;
+            right: 0; top: 0;
+            padding: 5px 10px;
+        }
+        #jump_wrapper {
+            padding: 0;
+            display: none;
+        }
+        #jump_to:hover #jump_wrapper {
+            display: block;
+        }
+        #jump_page {
+            padding: 5px 0 3px;
+            margin: 0 0 25px 25px;
+        }
+        #jump_page .source {
+            display: block;
+            padding: 5px 10px;
+            text-decoration: none;
+            border-top: 1px solid #eee;
+        }
+        #jump_page .source:hover {
+            background: #f5f5ff;
+        }
+        #jump_page .source:first-child {
+        }
+        table td {
+            border: 0;
+            outline: 0;
+        }
+        td.docs, th.docs {
+            max-width: 450px;
+            min-width: 450px;
+            min-height: 5px;
+            padding: 10px 25px 1px 50px;
+            overflow-x: hidden;
+            vertical-align: top;
+            text-align: left;
+        }
+        .docs pre {
+            margin: 15px 0 15px;
+            padding-left: 15px;
+        }
+        .docs p tt, .docs p code, .doc code {
+            background: #f8f8ff;
+            border: 1px solid #dedede;
+            font-size: 12px;
+            padding: 0 0.2em;
+        }
+        .pilwrap {
+            position: relative;
+        }
+        .pilcrow {
+            font: 12px Arial;
+            text-decoration: none;
+            color: #454545;
+            position: absolute;
+            top: 3px; left: -20px;
+            padding: 1px 2px;
+            opacity: 0;
+            -webkit-transition: opacity 0.2s linear;
+        }
+        td.docs:hover .pilcrow {
+            opacity: 1;
+        }
+        td.code, th.code {
+            padding: 10px 10px 10px 50px;
+            width: 100%;
+            vertical-align: top;
+            background: #f5f5ff;
+            border-left: 1px solid #e5e5ee;
+        }
+        pre, tt, code {
+            font-size: 12px; line-height: 18px;
+            font-family: Menlo, Monaco, Consolas, "Lucida Console", monospace;
+            margin: 0; padding: 0;
+        }
+
+        /*---------------------- Prettify Syntax Highlighting -----------------------------*/
+        .str{color:#080}.kwd{color:#008}.com{color:#800}.typ{color:#606}.lit{color:#066}.pun{color:#660}.pln{color:#000}.tag{color:#008}.atn{color:#606}.atv{color:#080}.dec{color:#606}pre.prettyprint{padding:2px;border:1px solid #888}ol.linenums{margin-top:0;margin-bottom:0}li.L0,li.L1,li.L2,li.L3,li.L5,li.L6,li.L7,li.L8{list-style:none}li.L1,li.L3,li.L5,li.L7,li.L9{background:#eee}@media print{.str{color:#060}.kwd{color:#006;font-weight:bold}.com{color:#600;font-style:italic}.typ{color:#404;font-weight:bold}.lit{color:#044}.pun{color:#440}.pln{color:#000}.tag{color:#006;font-weight:bold}.atn{color:#404}.atv{color:#060}}
+
+        table.doc { margin-bottom: 20px; }
+        td.doc { border-bottom: 1px dashed #708090; }
+        td.param { font-weight: bold; }
+        td.return { font-weight: bold; text-decoration: underline; }
+    </style>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/prettify/r224/prettify.js" type="text/javascript"></script>
+    <script src="https://google-code-prettify.googlecode.com/svn/trunk/src/lang-scala.js" type="text/javascript"></script>
+</head>
+
+<body onload="prettyPrint()">
+<div id="container">
+    <div id="background"></div>
+    <div id="jump_to">
+        Jump To &hellip;
+        <div id="jump_wrapper">
+            <div id="jump_page">
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/01-intro.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/01-intro.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/02-desugaring.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/02-desugaring.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/03-ae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/03-ae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/04-wae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/04-wae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/05-f1wae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/05-f1wae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/06-fae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/06-fae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/07-lcfae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/07-lcfae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/08-rcfae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/08-rcfae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/09-bcfae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/09-bcfae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/10-gc.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/10-gc.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/11-syntacticvsmeta.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/11-syntacticvsmeta.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/12-churchencoding.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/12-churchencoding.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/13-continuations-1.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/13-continuations-1.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/14-continuations-2.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/14-continuations-2.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/17-firstclasscontinuations.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/17-firstclasscontinuations.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/18-monads.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/18-monads.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/19-monads.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/19-monads.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/20-iomonad.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/20-iomonad.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/21-defunctionalization.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/21-defunctionalization.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/22-typesystems.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/22-typesystems.html
+                </a>
+                
+            </div>
+        </div>
+    </div>
+
+    <table cellpadding="0" cellspacing="0">
+        <thead>
+        <tr>
+            <th class="docs">
+                <h1>08-rcfae.scala</h1>
+            </th>
+            <th class="code"></th>
+        </tr>
+        </thead>
+        <tbody>
+        
+        <tr id="section_0">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_0">&#182;</a>
+                </div>
+                <h1>Recursion</h1>
+<p>Let's try to write a function that computes the sum of the first n integers. Let's pretend we do not know that the sum of the first n integers is n*(n+1)/2 and instead compute the sum in a loop. Let's try to do this in FAE (with if0):</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'>sealed abstract class Exp
+case class Num(n: Int) extends Exp
+case class Id(name: Symbol) extends Exp
+case class Add(lhs: Exp, rhs: Exp) extends Exp
+case class If0(cond: Exp, thenExp: Exp, elseExp: Exp) extends Exp
+implicit def num2exp(n: Int) = Num(n)
+implicit def id2exp(s: Symbol) = Id(s)
+case class Fun(param: Symbol, body: Exp) extends Exp
+case class App (funExpr: Exp, argExpr: Exp) extends Exp
+def wth(x: Symbol, xdef: Exp, body: Exp) : Exp = App(Fun(x,body),xdef)
+
+val sumattempt = wth('sum, Fun('n, If0('n, 0, Add('n, App('sum, Add('n,-1))))), App('sum, 10))
+
+</code></pre>
+            </td>
+        </tr>
+        
+        <tr id="section_1">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_1">&#182;</a>
+                </div>
+                <p>However, sumattempt won't work and yield an unbound identifier error (why?). An alternative would be to use a variant of the y combinator to support recursion properly, but today we want to talk about direct support for recursion. More specifically, we want a language construct &ldquo;letrec&rdquo; that is similar to &ldquo;with&rdquo;,  except that the bound symbol can be used in the expression the symbol is bound to:</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'>case class Letrec(x: Symbol, e: Exp, body: Exp) extends Exp
+
+</code></pre>
+            </td>
+        </tr>
+        
+        <tr id="section_2">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_2">&#182;</a>
+                </div>
+                <p>Using letrec, our example can be expressed as follows.</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'>val sum = Letrec('sum, Fun('n, If0('n, 0, Add('n, App('sum, Add('n,-1))))), App('sum, 10))
+
+</code></pre>
+            </td>
+        </tr>
+        
+        <tr id="section_3">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_3">&#182;</a>
+                </div>
+                <p>Let's now consider the semantics of letrec. Consider the evaluation of <code>Letrec(x,e,body)</code> in an environment <code>env</code>.</p>
+<p>What environment should we use to evaluate e and body, respectively? Using env for e will produce a <code>ClosureV(Fun('n,...'sum'...),env)</code>, and hence the environment when evaluating body will be <code>envbody = env + (x -&gt; ClosureV(Fun('n,...'sum...),env))</code>. This is bad, because the <code>env</code> in the closure does not contain a binding for <code>'sum</code> and hence the recursive invocation will fail.</p>
+<p>The environment in the closure must contain a mapping for <code>'sum</code>. Hence envbody should look like</p>
+<pre><code>envbody = env + (x -&gt; ClosureV(Fun('n, ...'sum...), 
+                               env+('sum -&gt; ClosureV(Fun('n,...'sum...),env)))
+</code></pre>
+<p>This looks better, but now the second closure contains an environment with no binding of <code>'sum</code>. What we need is an environment that satisfies the equation:</p>
+<pre><code>envbody == env + (x -&gt; ClosureV(Fun('n, ...'sum..), envbody))
+</code></pre>
+<p>Obviously envbody must be circular. There are different ways to create such a circular environment. We will choose mutation to create a circle. More specifically, we introduce a mutable pointer to a value (class ValuePointer) which will be initialized with a null pointer. In the Letrec case, we put such a ValuePointer in the environment and evaluate the (recursive) expression in that environment. Then we update the pointer with the result of evaluating that epxression.</p>
+<p>The only other change we need to make is to dereference a potential value pointer in the Id case. We deal with the necessary case distinction by a polymorphic &ldquo;value&rdquo; method.</p>
+<p>Due to the mutual recursion between ValueHolder and Value the definitions are put into an object.</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'>object Values {
+  trait ValueHolder {
+    def value : Value
+  }  
+  sealed abstract class Value extends ValueHolder { def value = this }
+  case class ValuePointer(var v: Value) extends ValueHolder { def value = v }
+  case class NumV(n: Int) extends Value
+  case class ClosureV(f: Fun, env: Env) extends Value
+  type Env = Map[Symbol, ValueHolder] 
+}  
+
+import Values._  // such that we do not have to write Values.ValueHolder etc.
+
+ 
+</code></pre>
+            </td>
+        </tr>
+        
+        <tr id="section_4">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_4">&#182;</a>
+                </div>
+                <p>The interpreter is unchanged except for the additional Letrec case and the modified Id case.</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'>def eval(e: Exp, env: Env) : Value = e match {
+  case Num(n: Int) =&gt; NumV(n)
+  case Id(x) =&gt; env(x).value  // dereference potential ValuePointer
+  case If0(cond, thenExp, elseExp) =&gt; eval(cond,env) match {
+    case NumV(0) =&gt; eval(thenExp,env)
+    case _ =&gt; eval(elseExp,env)
+  }    
+  case Add(l,r) =&gt; {
+    (eval(l,env), eval(r,env)) match {
+      case (NumV(v1),NumV(v2)) =&gt; NumV(v1+v2)
+      case _ =&gt; sys.error(&quot;can only add numbers&quot;)
+    }
+  }
+  case f@Fun(param,body) =&gt; ClosureV(f, env)
+  case App(f,a) =&gt; eval(f,env) match {
+    case ClosureV(f,closureEnv) =&gt; eval(f.body, closureEnv + (f.param -&gt; eval(a,env)))
+    case _ =&gt; sys.error(&quot;can only apply functions&quot;)
+  }
+  case Letrec(x,e,body) =&gt; {
+    val vp = ValuePointer(null)  // initialize pointer with null
+    val newenv = env + (x -&gt; vp)  // evaluate e in the environment extended with the placeholder
+	vp.v = eval(e,newenv)         // create the circle in the environment
+    eval(body,newenv) // evaluate body in circular environment
+  }
+}
+
+</code></pre>
+            </td>
+        </tr>
+        
+        <tr id="section_5">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_5">&#182;</a>
+                </div>
+                <p>The sum of numbers from 1 to 10 should be 55.</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'>assert(eval(sum, Map.empty) == NumV(55))
+
+// These test cases were contributed by rzhxeo (Sebastian Py)
+var func = Fun('n, If0('n, 0, App('func, Add('n, -1))))
+var test1 = Letrec('func, func, App('func, 1))
+var test2 = Letrec('func, App(Fun('notUsed, func), 0), App('func, 1))
+assert(eval(test1, Map()) == NumV(0)) 
+assert(eval(test2, Map()) == NumV(0)) 
+</code></pre>
+            </td>
+        </tr>
+        
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

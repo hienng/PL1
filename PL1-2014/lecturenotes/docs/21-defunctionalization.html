@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>21-defunctionalization.scala</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <style type="text/css">
+        /*--------------------- Layout and Typography ----------------------------*/
+        body {
+            font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, FreeSerif, serif;
+            font-size: 15px;
+            line-height: 22px;
+            color: #252519;
+            margin: 0; padding: 0;
+        }
+        a {
+            color: #261a3b;
+        }
+        a:visited {
+            color: #261a3b;
+        }
+        p {
+            margin: 0 0 15px 0;
+        }
+        h4, h5, h6 {
+            color: #333;
+            padding: 6px 0 6px 0;
+            font-size: 13px;
+        }
+        h2, h3 {
+            padding-bottom: 15px;
+            color: #000;
+            overflow: hidden;
+        }
+        h1 {
+            /*padding-top: 40px;*/
+            padding-bottom: 15px;
+            color: #000;
+        }
+        #container {
+            position: relative;
+        }
+        /*#background {
+            position: fixed;
+            top: 0; left: 525px; right: 0; bottom: 0;
+            background: #f5f5ff;
+            border-left: 1px solid #e5e5ee;
+            z-index: -1;
+        }*/
+        #jump_to, #jump_page {
+            background: white;
+            -webkit-box-shadow: 0 0 25px #777; -moz-box-shadow: 0 0 25px #777;
+            -webkit-border-bottom-left-radius: 5px; -moz-border-radius-bottomleft: 5px;
+            font: 10px Arial;
+            text-transform: uppercase;
+            cursor: pointer;
+            text-align: right;
+        }
+        #jump_to, #jump_wrapper {
+            position: fixed;
+            right: 0; top: 0;
+            padding: 5px 10px;
+        }
+        #jump_wrapper {
+            padding: 0;
+            display: none;
+        }
+        #jump_to:hover #jump_wrapper {
+            display: block;
+        }
+        #jump_page {
+            padding: 5px 0 3px;
+            margin: 0 0 25px 25px;
+        }
+        #jump_page .source {
+            display: block;
+            padding: 5px 10px;
+            text-decoration: none;
+            border-top: 1px solid #eee;
+        }
+        #jump_page .source:hover {
+            background: #f5f5ff;
+        }
+        #jump_page .source:first-child {
+        }
+        table td {
+            border: 0;
+            outline: 0;
+        }
+        td.docs, th.docs {
+            max-width: 450px;
+            min-width: 450px;
+            min-height: 5px;
+            padding: 10px 25px 1px 50px;
+            overflow-x: hidden;
+            vertical-align: top;
+            text-align: left;
+        }
+        .docs pre {
+            margin: 15px 0 15px;
+            padding-left: 15px;
+        }
+        .docs p tt, .docs p code, .doc code {
+            background: #f8f8ff;
+            border: 1px solid #dedede;
+            font-size: 12px;
+            padding: 0 0.2em;
+        }
+        .pilwrap {
+            position: relative;
+        }
+        .pilcrow {
+            font: 12px Arial;
+            text-decoration: none;
+            color: #454545;
+            position: absolute;
+            top: 3px; left: -20px;
+            padding: 1px 2px;
+            opacity: 0;
+            -webkit-transition: opacity 0.2s linear;
+        }
+        td.docs:hover .pilcrow {
+            opacity: 1;
+        }
+        td.code, th.code {
+            padding: 10px 10px 10px 50px;
+            width: 100%;
+            vertical-align: top;
+            background: #f5f5ff;
+            border-left: 1px solid #e5e5ee;
+        }
+        pre, tt, code {
+            font-size: 12px; line-height: 18px;
+            font-family: Menlo, Monaco, Consolas, "Lucida Console", monospace;
+            margin: 0; padding: 0;
+        }
+
+        /*---------------------- Prettify Syntax Highlighting -----------------------------*/
+        .str{color:#080}.kwd{color:#008}.com{color:#800}.typ{color:#606}.lit{color:#066}.pun{color:#660}.pln{color:#000}.tag{color:#008}.atn{color:#606}.atv{color:#080}.dec{color:#606}pre.prettyprint{padding:2px;border:1px solid #888}ol.linenums{margin-top:0;margin-bottom:0}li.L0,li.L1,li.L2,li.L3,li.L5,li.L6,li.L7,li.L8{list-style:none}li.L1,li.L3,li.L5,li.L7,li.L9{background:#eee}@media print{.str{color:#060}.kwd{color:#006;font-weight:bold}.com{color:#600;font-style:italic}.typ{color:#404;font-weight:bold}.lit{color:#044}.pun{color:#440}.pln{color:#000}.tag{color:#006;font-weight:bold}.atn{color:#404}.atv{color:#060}}
+
+        table.doc { margin-bottom: 20px; }
+        td.doc { border-bottom: 1px dashed #708090; }
+        td.param { font-weight: bold; }
+        td.return { font-weight: bold; text-decoration: underline; }
+    </style>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/prettify/r224/prettify.js" type="text/javascript"></script>
+    <script src="https://google-code-prettify.googlecode.com/svn/trunk/src/lang-scala.js" type="text/javascript"></script>
+</head>
+
+<body onload="prettyPrint()">
+<div id="container">
+    <div id="background"></div>
+    <div id="jump_to">
+        Jump To &hellip;
+        <div id="jump_wrapper">
+            <div id="jump_page">
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/01-intro.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/01-intro.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/02-desugaring.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/02-desugaring.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/03-ae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/03-ae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/04-wae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/04-wae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/05-f1wae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/05-f1wae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/06-fae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/06-fae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/07-lcfae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/07-lcfae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/08-rcfae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/08-rcfae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/09-bcfae.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/09-bcfae.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/10-gc.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/10-gc.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/11-syntacticvsmeta.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/11-syntacticvsmeta.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/12-churchencoding.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/12-churchencoding.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/13-continuations-1.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/13-continuations-1.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/14-continuations-2.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/14-continuations-2.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/17-firstclasscontinuations.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/17-firstclasscontinuations.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/18-monads.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/18-monads.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/19-monads.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/19-monads.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/20-iomonad.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/20-iomonad.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/21-defunctionalization.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/21-defunctionalization.html
+                </a>
+                
+                <a class="source" href="/Users/klaus/git/PL1-2014/lecturenotes/22-typesystems.html">
+                    /Users/klaus/git/PL1-2014/lecturenotes/22-typesystems.html
+                </a>
+                
+            </div>
+        </div>
+    </div>
+
+    <table cellpadding="0" cellspacing="0">
+        <thead>
+        <tr>
+            <th class="docs">
+                <h1>21-defunctionalization.scala</h1>
+            </th>
+            <th class="code"></th>
+        </tr>
+        </thead>
+        <tbody>
+        
+        <tr id="section_0">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_0">&#182;</a>
+                </div>
+                <h1>Defunctionalization</h1>
+<p>The material in these notes is based on: John C. Reynolds: Definitional Interpreters for Higher-Order Programming Languages.  Higher-Order and Symbolic Computation 11(4): 363-397 (1998)</p>
+<p>In the discussion of syntactic interpretation vs meta interpretation we have learned that we only learn something about (and control) a language feature if we choose syntactic interpretation.</p>
+<p>Today we want to discuss techniques with which we can make our interpreter so syntactic that it corresponds to an abstract machine: A machine with a (possibly infinite) set of states and a simple transition relation between the states. We already know the technique with which we can take control over the call stack management: CPS transformation. After CPS-transforming the interpreter, we do not rely on the order of evaluation and call stack management of the meta language anymore.  We replicate its definition here:</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'>sealed abstract class Exp
+case class Num(n : Int) extends Exp
+case class Id(name : Symbol) extends Exp
+case class Add(lhs : Exp, rhs : Exp) extends Exp
+case class Fun(param : Symbol, body : Exp) extends Exp
+case class App (funExpr : Exp, argExpr : Exp) extends Exp
+
+sealed abstract class Value
+type Env = Map[Symbol, Value]
+case class NumV(n : Int) extends Value
+case class ClosureV(f : Fun, env : Env) extends Value
+
+object CPSTransformed {
+  def eval[T](e : Exp, env : Env, k : Value =&gt; T) : T = e match {
+    case Num(n : Int) =&gt; k(NumV(n))
+    case Id(x) =&gt; k(env(x))
+    case Add(l, r) =&gt;
+      eval( l, env
+          , lv =&gt; eval( r, env
+                      , rv =&gt; (lv, rv) match {
+                          case (NumV(v1), NumV(v2)) =&gt; k(NumV(v1 + v2))
+                          case _ =&gt; sys.error(&quot;can only add numbers&quot;)
+                        } ) )
+    case f@Fun(param, body) =&gt; k(ClosureV(f, env))
+    case App(f, a) =&gt;
+      eval( f, env
+          , cl =&gt; cl match {
+              case ClosureV(f, closureEnv) =&gt;
+                eval( a, env
+                    , av =&gt; eval(f.body, closureEnv + (f.param -&gt; av), k) )
+              case _ =&gt; sys.error(&quot;can only apply functions&quot;)
+            } )
+  }
+}
+
+</code></pre>
+            </td>
+        </tr>
+        
+        <tr id="section_1">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_1">&#182;</a>
+                </div>
+                <p>However, the CPS-transformed interpreter still uses high-level features of the meta-language, most notably first-class functions. We will now introduce one transformation that can be used to transform a function using higher-order functions into one using only first-order functions.  It is general program transformation technique, not restricted only to interpreters.</p>
+<h2>Lambda Lifting</h2>
+<p>The first of these techniques is <em>lambda lifting</em>.  The goal of lambda lifting is to turn local functions into top-level functions.  That is, all &ldquo;lambdas&rdquo; only occur at the top-level.  Variables in the local environment that are normally stored in the function's closure are instead passed as parameters to the top-level function. Lambda lifting is accomplished by the following steps:</p>
+<ol>
+<li>Invent a new and unique name for each function that is not a top-level function.</li>
+<li>Create a function with this name. Its body is the body of the former local function.  Such a function will contain free variables.  3) Add a parameter to so-obtained top-level function for each free variable in its body.  Thus it becomes a higher-order function that returns a function when passed these arguments.  4) Replace the local function by a call to the new top-level function and pass the corresponding local context via the arguments created in step 3.</li>
+</ol>
+<p>Example: Let's lambda-lift the functions <code>y =&gt; y + n</code> and <code>y =&gt; y*n</code> in</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'>def map(f : Int =&gt; Int, xs : List[Int]) : List[Int] = xs match {
+  case Nil =&gt; Nil
+  case (x :: xs) =&gt; f(x) :: map(f, xs)
+}
+
+def addAndMultNToList(n : Int, xs : List[Int]) = map(y =&gt; y * n, map(y =&gt; y + n, xs)) 
+
+</code></pre>
+            </td>
+        </tr>
+        
+        <tr id="section_2">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_2">&#182;</a>
+                </div>
+                <p>We create two new top-level functions. Let's call them <code>f</code> and <code>g</code> Their bodies are respectively <code>y =&gt; y + n</code> and <code>y =&gt; y * n</code>. We add a parameter for each free variable. In the example, the free variable is <code>n</code> in both cases:</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'>def f(n : Int) = (y : Int) =&gt; y + n
+def g(n : Int) = (y : Int) =&gt; y * n
+
+</code></pre>
+            </td>
+        </tr>
+        
+        <tr id="section_3">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_3">&#182;</a>
+                </div>
+                <p>or shorter:</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'>def f(n : Int)(y : Int) = y + n
+def g(n : Int)(y : Int) = y * n
+
+</code></pre>
+            </td>
+        </tr>
+        
+        <tr id="section_4">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_4">&#182;</a>
+                </div>
+                <p>The local function can now be replaced by a call to the new global function.</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'>def addAndMultNToList(n : Int, xs : List[Int]) = map(g(n), map(f(n), xs)) 
+
+</code></pre>
+            </td>
+        </tr>
+        
+        <tr id="section_5">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_5">&#182;</a>
+                </div>
+                <p>Let's now perform the same technique to the CPS-transformed interpreter given above.  It contains local functions in four places: two in the <code>Add</code> branch and two in the <code>App</code> branch. We call the corresponding top-level functions, from left to right, <code>addc1</code>, <code>addc2</code>, <code>appc1</code> and <code>appc2</code>.
+<br  />An interesting novelty in the interpreter is that some local functions (corresponding to <code>addc1</code> and <code>appc1</code>) create local functions themselves. This means that <code>addc1</code> must call <code>addc2</code> and <code>appc1</code> must call <code>appc2</code>. The rest of the transformation is a straightforward application of the transformation steps described above:</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'>object LambdaLifted {
+  def addc1[T](r : Exp, env : Env, k : Value =&gt; T)(lv : Value) = eval(r, env, addc2(lv, k))
+
+  def addc2[T](lv : Value, k : Value =&gt; T)(rv : Value) = (lv, rv) match {
+    case (NumV(v1), NumV(v2)) =&gt; k(NumV(v1 + v2))
+    case _ =&gt; sys.error(&quot;can only add numbers&quot;) 
+  }
+
+  def appc1[T](a : Exp, env : Env, k : Value =&gt; T)(cl : Value) = cl match {
+    case ClosureV(f, closureEnv) =&gt; eval(a, env, appc2(f, closureEnv, k))
+    case _ =&gt; sys.error(&quot;can only apply functions&quot;)
+  }
+
+  def appc2[T](f : Fun, closureEnv : Env, k : Value =&gt; T)(av : Value) = eval(f.body, closureEnv + (f.param -&gt; av), k)
+
+  def eval[T](e : Exp, env : Env, k : Value =&gt; T) : T = e match {
+    case Num(n : Int) =&gt; k(NumV(n))
+    case Id(x) =&gt; k(env(x))
+    case Add(l, r) =&gt; eval(l, env, addc1(r, env, k))
+    case f@Fun(param, body) =&gt; k(ClosureV(f, env))
+    case App(f, a) =&gt; eval(f, env, appc1(a, env, k))
+  }
+}
+
+</code></pre>
+            </td>
+        </tr>
+        
+        <tr id="section_6">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_6">&#182;</a>
+                </div>
+                <p>The lambda-lifted interpreter contains no local functions anymore, but it still contains higher-order functions, since `addc1' etc. return functions that are passed as parameters to other functions.</p>
+<h2>Defunctionalization</h2>
+<p><em>Defunctionalization</em> is a program transformation technique that turns higher-order programs that have already been lambda-lifted into first-order programs that contain no higher-order functions anymore.  Any program contains only finitely many function definitions. The idea of defunctionalization is to assign a unique identifier to each of these function definitions. The function &ldquo;dispatch&rdquo; then happens in a function <code>apply</code>, which receives the identifier corresponding to a function definition and dispatches the identifier to the right function body. Every function application within the program is then replaced by a call to the <code>apply</code> function with the function identifier as the first argument.</p>
+<p>In addition to the unique identifier, the <code>apply</code> function also needs bindings for the free variables in the function body. Hence we need to store the values for these free variables along with the unique identifier. Finally, the <code>apply</code> function needs to know about the argument to the function. These become additional parameters of the <code>apply</code> function.</p>
+<p>Let's illustrate defunctionalization in the <code>addAndMultNToList</code> example from above.</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'>sealed abstract class FunctionValue
+case class F(n : Int) extends FunctionValue
+case class G(n : Int) extends FunctionValue
+
+def apply(f : FunctionValue, y : Int) : Int = f match {
+  case F(n) =&gt; y + n
+  case G(n) =&gt; y * n
+}
+
+def map(f : FunctionValue, xs : List[Int]) : List[Int] = xs match {
+  case Nil =&gt; Nil
+  case (x :: xs) =&gt; apply(f, x) :: map(f, xs)
+}
+
+def addAndMultNToList(n : Int, xs : List[Int]) = map(G(n), map(F(n), xs))
+ 
+</code></pre>
+            </td>
+        </tr>
+        
+        <tr id="section_7">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_7">&#182;</a>
+                </div>
+                <p>Let's now apply defunctionalization to our CPS-transformed interpreter:</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'>object Defunctionalized {
+
+  sealed abstract class FunctionValue[T]
+  case class AddC1[T](r : Exp, env : Env, k : FunctionValue[T]) extends FunctionValue[T]
+  case class AddC2[T](lv : Value, k : FunctionValue[T]) extends FunctionValue[T]
+  case class AppC1[T](a : Exp, env : Env, k : FunctionValue[T]) extends FunctionValue[T]
+  case class AppC2[T](f : Fun, closureEnv : Env, k : FunctionValue[T]) extends FunctionValue[T]
+
+  def apply[T](fv : FunctionValue[T], v : Value) : T  = fv match {
+    case AddC1(r, env, k) =&gt; eval(r, env, AddC2(v, k))
+    case AddC2(lv, k) =&gt; (lv, v) match {
+      case (NumV(v1), NumV(v2)) =&gt; apply(k, NumV(v1 + v2))
+      case _ =&gt; sys.error(&quot;can only add numbers&quot;) 
+    }
+    case AppC1(a, env, k) =&gt; v match {
+      case ClosureV(f, closureEnv) =&gt; eval(a, env, AppC2(f, closureEnv, k))
+      case _ =&gt; sys.error(&quot;can only apply functions&quot;)
+    }
+    case AppC2(f, closureEnv, k) =&gt; eval(f.body, closureEnv + (f.param -&gt; v), k)
+  }
+
+  def eval[T](e : Exp, env : Env, k : FunctionValue[T]) : T = e match {
+    case Num(n : Int) =&gt; apply(k, NumV(n))
+    case Id(x) =&gt; apply(k, env(x))
+    case Add(l, r) =&gt; eval(l, env, AddC1(r, env, k))
+    case f@Fun(param, body) =&gt; apply(k, ClosureV(f, env))
+    case App(f, a) =&gt; eval(f, env, AppC1(a, env, k))
+  }
+}
+
+</code></pre>
+            </td>
+        </tr>
+        
+        <tr id="section_8">
+            <td class="docs">
+                <div class="pilwrap">
+                    <a class="pilcrow" href="#section_8">&#182;</a>
+                </div>
+                <p>This interpreter can be seen as an abstract machine. The state space of the abstract machine is (<code>Exp</code> x <code>Env</code> x <code>FunctionValue</code>) U (<code>FunctionValue</code> x <code>Value</code>), where &ldquo;x&rdquo; stands for cross product and &ldquo;U&rdquo; stands for set union. Every case in the pattern matches in <code>apply</code> and <code>eval</code> can be read as a transition in this state space.</p>
+
+            </td></tr><tr>
+            <td class="code">
+                <pre><code class='prettyprint lang-scala'></code></pre>
+            </td>
+        </tr>
+        
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
